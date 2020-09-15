@@ -3,17 +3,18 @@
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
 
       <div class="title-container">
-        <h3 class="title">Login Form</h3>
+        <h3 class="title">博客后台</h3>
       </div>
 
       <el-form-item prop="username">
         <span class="svg-container">
           <svg-icon icon-class="user" />
         </span>
+        <!-- ref="username" 用于表单校验 -->
         <el-input
           ref="username"
           v-model="loginForm.username"
-          placeholder="Username"
+          placeholder="请输入账号"
           name="username"
           type="text"
           tabindex="1"
@@ -30,7 +31,7 @@
           ref="password"
           v-model="loginForm.password"
           :type="passwordType"
-          placeholder="Password"
+          placeholder="请输入密码"
           name="password"
           tabindex="2"
           auto-complete="on"
@@ -41,12 +42,13 @@
         </span>
       </el-form-item>
 
-      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">Login</el-button>
+      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">登陆</el-button>
 
-      <div class="tips">
+      <!-- 提示 -->
+      <!-- <div class="tips">
         <span style="margin-right:20px;">username: admin</span>
         <span> password: any</span>
-      </div>
+      </div> -->
 
     </el-form>
   </div>
@@ -58,26 +60,26 @@ import { validUsername } from '@/utils/validate'
 export default {
   name: 'Login',
   data() {
-    const validateUsername = (rule, value, callback) => {
+    const validateUsername = (rule, value, callback) => { // 表单校验
       if (!validUsername(value)) {
-        callback(new Error('Please enter the correct user name'))
+        callback(new Error('请输入用户名'))
       } else {
         callback()
       }
     }
-    const validatePassword = (rule, value, callback) => {
+    const validatePassword = (rule, value, callback) => { // 表单校验
       if (value.length < 6) {
-        callback(new Error('The password can not be less than 6 digits'))
+        callback(new Error('密码不能小于6位数'))
       } else {
         callback()
       }
     }
     return {
       loginForm: {
-        username: 'admin',
-        password: '111111'
+        username: '', // 默认值
+        password: ''
       },
-      loginRules: {
+      loginRules: { // 自定义校验规则
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],
         password: [{ required: true, trigger: 'blur', validator: validatePassword }]
       },
@@ -106,17 +108,18 @@ export default {
       })
     },
     handleLogin() {
-      this.$refs.loginForm.validate(valid => {
-        if (valid) {
+      this.$refs.loginForm.validate(valid => { // 表单校验
+        if (valid) { // 校验通过
           this.loading = true
-          this.$store.dispatch('user/login', this.loginForm).then(() => {
-            this.$router.push({ path: this.redirect || '/' })
-            this.loading = false
-          }).catch(() => {
+          // dispatch 是调用 action 的方式，调用的是 user 里面的 login 方法
+          this.$store.dispatch('user/login', this.loginForm).then(() => { // 成功的回调
+            this.$router.push({ path: this.redirect || '/' }) // 路由直接跳转到首页
+            this.loading = false // 加载效果变为false
+          }).catch(() => { // 捕获异常
             this.loading = false
           })
-        } else {
-          console.log('error submit!!')
+        } else { // 校验失败
+          // console.log('error submit!!')
           return false
         }
       })

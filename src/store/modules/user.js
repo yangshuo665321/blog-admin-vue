@@ -1,6 +1,7 @@
 import { login, logout, getInfo } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import { resetRouter } from '@/router'
+import md5 from 'js-md5'
 
 const getDefaultState = () => {
   return {
@@ -28,35 +29,36 @@ const mutations = {
 }
 
 const actions = {
-  // user login
-  login({ commit }, userInfo) {
-    const { username, password } = userInfo
+  // 用户登陆
+  login({ commit }, userInfo) { // 前面参数commit是固定的，后面传入的是用户对象userInfo
+    const { username, password } = userInfo // 解构表达式，从userInfo中获取到用户名和密码
     return new Promise((resolve, reject) => {
-      login({ username: username.trim(), password: password }).then(response => {
-        const { data } = response
-        commit('SET_TOKEN', data.token)
-        setToken(data.token)
-        resolve()
-      }).catch(error => {
-        reject(error)
+      // 调用登陆接口
+      login({ username: username.trim(), password: md5(password) }).then(response => { // 成功后返回
+        console.log(response)
+        commit('SET_TOKEN', response.data.token) // 往vuex中设置token
+        setToken(response.data.token) // 往Cookie里设置token
+        resolve() // 登陆成功调用resolve方法
+      }).catch(error => { // 如果上述报错，捕获异常
+        reject(error) // 调用reject方法
       })
     })
   },
 
-  // get user info
-  getInfo({ commit, state }) {
+  // 获取用户信息
+  getInfo({ commit }) {
     return new Promise((resolve, reject) => {
-      getInfo(state.token).then(response => {
+      getInfo().then(response => {
         const { data } = response
 
-        if (!data) {
-          reject('Verification failed, please Login again.')
-        }
+        // if (!data) {
+        //   reject('Verification failed, please Login again.')
+        // }
 
-        const { name, avatar } = data
+        const { name, header } = data
 
         commit('SET_NAME', name)
-        commit('SET_AVATAR', avatar)
+        commit('SET_AVATAR', header)
         resolve(data)
       }).catch(error => {
         reject(error)
@@ -64,7 +66,7 @@ const actions = {
     })
   },
 
-  // user logout
+  // 退出登陆
   logout({ commit, state }) {
     return new Promise((resolve, reject) => {
       logout(state.token).then(() => {
@@ -78,7 +80,7 @@ const actions = {
     })
   },
 
-  // remove token
+  // 刷新token
   resetToken({ commit }) {
     return new Promise(resolve => {
       removeToken() // must remove  token  first
