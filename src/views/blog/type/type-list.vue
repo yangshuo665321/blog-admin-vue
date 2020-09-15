@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-button type="primary" class="add-button" @click="openAddDrawer">添加</el-button>
+    <el-button size="mini" type="primary" class="add-button" @click="openAddDrawer">添加</el-button>
 
     <!-- 表格 -->
     <el-table :data="typeList" border style="width: 100%">
