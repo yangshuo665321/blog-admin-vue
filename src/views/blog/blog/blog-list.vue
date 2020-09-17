@@ -35,6 +35,18 @@
       </el-table-column>
     </el-table>
 
+    <!-- 分页 -->
+    <el-pagination
+      class="pagination"
+      :current-page="page.currentPage"
+      :page-sizes="[10, 20, 50, 100]"
+      :page-size="page.pageSize"
+      layout="total, sizes, prev, pager, next, jumper"
+      :total="page.totalCount"
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+    />
+
     <!-- 添加的弹框 -->
     <el-dialog title="添加" :visible.sync="addDialog">
       <blog-add @closeAddDialog="closeAddDialog" @getByPage="getByPage" />
@@ -99,6 +111,16 @@ export default {
     closeAddDialog() {
       // 关闭添加弹窗
       this.addDialog = false
+    },
+    handleSizeChange(val) {
+      this.page.pageSize = val
+      // 重新查询
+      this.getByPage()
+    },
+    handleCurrentChange(val) {
+      this.page.currentPage = val
+      // 重新查询
+      this.getByPage()
     }
   }
 }

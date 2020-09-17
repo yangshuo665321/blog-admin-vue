@@ -9,3 +9,9 @@ export default {
   name: 'App'
 }
 </script>
+
+<style>
+.pagination {
+  margin-top: 15px;
+}
+</style>
