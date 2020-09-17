@@ -15,7 +15,16 @@
         </el-select>
       </el-form-item>
       <el-form-item label="封面">
-        <el-input v-model="blog.blogImage" />
+        <el-upload
+          class="avatar-uploader"
+          :action="uploadUrl"
+          :show-file-list="false"
+          :on-success="uploadSuccess"
+          :headers="headers"
+        >
+          <img v-if="imageUrl" :src="imageUrl" class="avatar">
+          <i v-else class="el-icon-plus avatar-uploader-icon" />
+        </el-upload>
       </el-form-item>
       <el-form-item label="内容">
         <tinymce v-model="blog.blogContent" />
@@ -36,6 +45,8 @@
 import blogApi from '@/api/blog'
 // 引入Tinymce
 import Tinymce from '@/components/Tinymce/index'
+// 引入getToken
+import { getToken } from '@/utils/auth'
 
 export default {
   components: {
@@ -50,7 +61,12 @@ export default {
         blogContent: null,
         blogRemark: null
       },
-      typeList: this.$store.getters.typeList
+      typeList: this.$store.getters.typeList,
+      imageUrl: null, // 上传图片回显url
+      uploadUrl: process.env.VUE_APP_UPLOAD_URL, // 上传图片路径
+      headers: { // 上传文件的请求头
+        Authorization: getToken()
+      }
     }
   },
   methods: {
@@ -60,7 +76,38 @@ export default {
         this.$emit('closeAddDialog')
         this.$emit('getByPage')
       })
+    },
+    uploadSuccess(res, file) {
+      this.$message.success(res.msg)
+      this.imageUrl = res.data
+      this.blog.blogImage = res.data
     }
   }
 }
 </script>
+
+<style>
+  .avatar-uploader .el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .avatar-uploader .el-upload:hover {
+    border-color: #409EFF;
+  }
+  .avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 178px;
+    height: 178px;
+    line-height: 178px;
+    text-align: center;
+  }
+  .avatar {
+    width: 178px;
+    height: 178px;
+    display: block;
+  }
+</style>
