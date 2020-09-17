@@ -46,6 +46,12 @@ export const constantRoutes = [
         name: 'Type',
         component: () => import('@/views/blog/type/type-list'),
         meta: { title: '分类管理', icon: 'table' }
+      },
+      {
+        path: 'blog',
+        name: 'Blog',
+        component: () => import('@/views/blog/blog/blog-list'),
+        meta: { title: '博客管理', icon: 'table' }
       }
     ]
   },
