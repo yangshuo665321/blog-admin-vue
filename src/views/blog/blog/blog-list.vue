@@ -32,7 +32,7 @@
             </el-button>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item>
-                <el-button size="mini" type="primary" @click="handleEdit(scope.row.typeId)">编辑</el-button>
+                <el-button size="mini" type="primary" @click="handleEdit(scope.row.blogId)">编辑</el-button>
               </el-dropdown-item>
               <el-dropdown-item>
                 <el-button size="mini" type="danger" @click="handleDelete(scope.row.blogId)">删除</el-button>
@@ -59,6 +59,11 @@
     <el-dialog title="添加" :visible.sync="addDialog">
       <blog-add @closeAddDialog="closeAddDialog" @getByPage="getByPage" />
     </el-dialog>
+
+    <!-- 修改的弹框 -->
+    <el-dialog title="修改" :visible.sync="updateDialog">
+      <blog-update :blog="blog" @closeUpdateDialog="closeUpdateDialog" @getByPage="getByPage" />
+    </el-dialog>
   </div>
 </template>
 
@@ -67,10 +72,12 @@
 import blogApi from '@/api/blog'
 // 导入组件
 import BlogAdd from './blog-add'
+import BlogUpdate from './blog-update'
 
 export default {
   components: {
-    BlogAdd
+    BlogAdd,
+    BlogUpdate
   },
   data() {
     return {
@@ -99,6 +106,7 @@ export default {
         createdTime: '',
         updateTime: ''
       },
+      updateDialog: false, // 控制修改弹窗显示
       addDialog: false // 控制添加弹窗显示
     }
   },
@@ -129,6 +137,17 @@ export default {
       this.page.currentPage = val
       // 重新查询
       this.getByPage()
+    },
+    // 修改
+    handleEdit(id) {
+      blogApi.get(id).then((res) => {
+        this.blog = res.data
+        this.updateDialog = true
+      })
+    },
+    closeUpdateDialog() {
+      // 关闭添加弹窗
+      this.updateDialog = false
     },
     // 删除
     handleDelete(id) {
