@@ -6,7 +6,15 @@
     <el-table :data="page.list" border style="width: 100%">
       <el-table-column prop="blogTitle" width="200" show-overflow-tooltip label="标题" />
       <el-table-column prop="typeName" label="分类" width="100" />
-      <el-table-column prop="blogImage" label="图片" width="160" />
+      <el-table-column prop="blogImage" label="图片" width="160">
+        <template slot-scope="scope">
+          <el-image
+            style="width: 100px; height: 100px"
+            :src="scope.row.blogImage"
+            :preview-src-list="[scope.row.blogImage]"
+          />
+        </template>
+      </el-table-column>
       <el-table-column prop="blogGoods" label="点赞数" width="70" />
       <el-table-column prop="blogRead" label="阅读数" width="70" />
       <el-table-column prop="blogCollection" label="收藏数" width="70" />
