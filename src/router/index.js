@@ -35,11 +35,11 @@ export const constantRoutes = [
   },
 
   {
-    path: '/blog',
+    path: '/article',
     component: Layout,
-    redirect: '/blog/blog', // 默认跳转
-    name: 'BlogManage',
-    meta: { title: '博客管理', icon: 'example' },
+    redirect: '/article/blog', // 默认跳转
+    name: 'Article',
+    meta: { title: '文章管理', icon: 'example' },
     children: [
       {
         path: 'type',
