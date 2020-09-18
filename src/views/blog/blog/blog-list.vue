@@ -35,7 +35,7 @@
                 <el-button size="mini" type="primary" @click="handleEdit(scope.row.typeId)">编辑</el-button>
               </el-dropdown-item>
               <el-dropdown-item>
-                <el-button size="mini" type="danger" @click="handleDelete(scope.row.typeId)">删除</el-button>
+                <el-button size="mini" type="danger" @click="handleDelete(scope.row.blogId)">删除</el-button>
               </el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
@@ -129,6 +129,21 @@ export default {
       this.page.currentPage = val
       // 重新查询
       this.getByPage()
+    },
+    // 删除
+    handleDelete(id) {
+      this.$confirm('是否删除该博客?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'error'
+      }).then(() => {
+        blogApi.deleteById(id).then((res) => {
+          // 提示
+          this.$message.success(res.msg)
+          // 刷新列表
+          this.getByPage()
+        })
+      })
     }
   }
 }
