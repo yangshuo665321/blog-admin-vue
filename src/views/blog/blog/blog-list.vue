@@ -21,9 +21,9 @@
     <el-button size="mini" type="primary" class="add-button" @click="openAddDialog">添加</el-button>
 
     <!-- 表格(:data="page.list" 表格绑定的数据为page.list) -->
-    <el-table :data="page.list" border style="width: 100%">
+    <el-table :data="page.list" border style="width: 100%" @sort-change="changeSort">
       <el-table-column prop="blogTitle" width="200" show-overflow-tooltip label="标题" />
-      <el-table-column prop="typeName" label="分类" width="100" />
+      <el-table-column prop="typeName" label="分类" width="100" sortable="custom" />
       <el-table-column prop="blogImage" label="图片" width="160">
         <template slot-scope="scope">
           <el-image
@@ -33,13 +33,13 @@
           />
         </template>
       </el-table-column>
-      <el-table-column prop="blogGoods" label="点赞数" width="70" />
-      <el-table-column prop="blogRead" label="阅读数" width="70" />
-      <el-table-column prop="blogCollection" label="收藏数" width="70" />
-      <el-table-column prop="blogComment" label="评论数" width="70" />
+      <el-table-column prop="blogGoods" label="点赞数" width="70" sortable="custom" />
+      <el-table-column prop="blogRead" label="阅读数" width="70" sortable="custom" />
+      <el-table-column prop="blogCollection" label="收藏数" width="70" sortable="custom" />
+      <el-table-column prop="blogComment" label="评论数" width="70" sortable="custom" />
       <el-table-column prop="blogSource" label="文章来源" width="160" />
-      <el-table-column prop="createdTime" label="创建时间" width="160" />
-      <el-table-column prop="updateTime" label="更新时间" width="160" />
+      <el-table-column prop="createdTime" label="创建时间" width="160" sortable="custom" />
+      <el-table-column prop="updateTime" label="更新时间" width="160" sortable="custom" />
       <el-table-column prop="blogRemark" label="备注" width="200" show-overflow-tooltip />
       <el-table-column label="操作">
         <template slot-scope="scope">
@@ -146,6 +146,17 @@ export default {
     openAddDialog() {
       // 打开添加弹窗
       this.addDialog = true
+    },
+    // 排序方法
+    changeSort(e) {
+      if (e.order) { // 如果order存在
+        this.page.sortColumn = e.prop
+        this.page.sortMethod = e.order
+      } else {
+        this.page.sortColumn = ''
+        this.page.sortMethod = 'asc'
+      }
+      this.getByPage()
     },
     closeAddDialog() {
       // 关闭添加弹窗
