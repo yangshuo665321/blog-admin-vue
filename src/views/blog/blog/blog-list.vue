@@ -1,5 +1,23 @@
 <template>
   <div>
+
+    <!-- 搜索栏 -->
+    <el-form :inline="true" :model="page" class="demo-form-inline" size="mini">
+      <el-form-item label="博客标题">
+        <el-input v-model="page.params.blogTitle" placeholder="博客标题" clearable />
+      </el-form-item>
+      <el-form-item label="分类">
+        <el-select v-model="page.params.typeId" placeholder="分类" clearable filterable>
+          <el-option v-for="item in typeList" :key="item.typeId" :label="item.typeName" :value="item.typeId" />
+        </el-select>
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" size="mini" @click="getByPage">查询</el-button>
+      </el-form-item>
+    </el-form>
+
+    <el-divider />
+
     <el-button size="mini" type="primary" class="add-button" @click="openAddDialog">添加</el-button>
 
     <!-- 表格(:data="page.list" 表格绑定的数据为page.list) -->
@@ -106,6 +124,7 @@ export default {
         createdTime: '',
         updateTime: ''
       },
+      typeList: this.$store.getters.typeList, // 分类列表
       updateDialog: false, // 控制修改弹窗显示
       addDialog: false // 控制添加弹窗显示
     }
@@ -113,6 +132,10 @@ export default {
   // 创建时调用
   created() {
     this.getByPage()
+    // 延迟加载，解决typeList获取不到的问题
+    setTimeout(() => {
+      this.typeList = this.$store.getters.typeList
+    }, 500)
   },
   methods: {
     getByPage() {
