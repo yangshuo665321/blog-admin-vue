@@ -52,6 +52,12 @@ export const constantRoutes = [
         name: 'Blog',
         component: () => import('@/views/blog/blog/blog-list'),
         meta: { title: '博客管理', icon: 'table' }
+      },
+      {
+        path: 'about',
+        name: 'About',
+        component: () => import('@/views/blog/about/about-list'),
+        meta: { title: '关于我的', icon: 'table' }
       }
     ]
   },
