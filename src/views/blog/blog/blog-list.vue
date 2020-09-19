@@ -53,6 +53,9 @@
                 <el-button size="mini" type="primary" @click="handleEdit(scope.row.blogId)">编辑</el-button>
               </el-dropdown-item>
               <el-dropdown-item>
+                <el-button size="mini" type="primary" @click="toRead(scope.row.blogId)">查看</el-button>
+              </el-dropdown-item>
+              <el-dropdown-item>
                 <el-button size="mini" type="danger" @click="handleDelete(scope.row.blogId)">删除</el-button>
               </el-dropdown-item>
             </el-dropdown-menu>
@@ -76,6 +79,11 @@
     <!-- 添加的弹框 -->
     <el-dialog title="添加" :visible.sync="addDialog">
       <blog-add @closeAddDialog="closeAddDialog" @getByPage="getByPage" />
+    </el-dialog>
+
+    <!-- 阅读弹窗 -->
+    <el-dialog title="阅读" :visible.sync="readDialog" width="50%">
+      <div v-html="blog.blogContent" />
     </el-dialog>
 
     <!-- 修改的弹框 -->
@@ -126,6 +134,7 @@ export default {
       },
       typeList: this.$store.getters.typeList, // 分类列表
       updateDialog: false, // 控制修改弹窗显示
+      readDialog: false, // 控制阅读弹窗显示
       addDialog: false // 控制添加弹窗显示
     }
   },
@@ -177,6 +186,13 @@ export default {
       blogApi.get(id).then((res) => {
         this.blog = res.data
         this.updateDialog = true
+      })
+    },
+    // 阅读
+    toRead(id) {
+      blogApi.get(id).then((res) => {
+        this.blog = res.data
+        this.readDialog = true
       })
     },
     closeUpdateDialog() {
