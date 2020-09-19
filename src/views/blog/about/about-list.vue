@@ -40,6 +40,9 @@
                 <el-button size="mini" type="primary" @click="handleEdit(scope.row.aboutId)">编辑</el-button>
               </el-dropdown-item>
               <el-dropdown-item>
+                <el-button size="mini" type="primary" @click="toRead(scope.row.aboutId)">查看</el-button>
+              </el-dropdown-item>
+              <el-dropdown-item>
                 <el-button v-if="scope.row.enable === 0" size="mini" type="success" @click="toEnable(scope.row.aboutId)">启用</el-button>
               </el-dropdown-item>
               <el-dropdown-item>
@@ -69,6 +72,11 @@
     <!-- 添加的弹框 -->
     <el-dialog title="添加" :visible.sync="addDialog">
       <about-add @closeAddDialog="closeAddDialog" @getByPage="getByPage" />
+    </el-dialog>
+
+    <!-- 阅读弹窗 -->
+    <el-dialog title="阅读" :visible.sync="readDialog" width="50%">
+      <div v-html="about.aboutContent" />
     </el-dialog>
 
     <!-- 修改的弹框 -->
@@ -112,6 +120,7 @@ export default {
         enable: 0
       },
       updateDialog: false, // 控制修改弹窗显示
+      readDialog: false, // 控制阅读弹窗显示
       addDialog: false // 控制添加弹窗显示
     }
   },
@@ -189,6 +198,13 @@ export default {
       aboutApi.get(id).then((res) => {
         this.about = res.data
         this.updateDialog = true
+      })
+    },
+    // 阅读
+    toRead(id) {
+      aboutApi.get(id).then((res) => {
+        this.about = res.data
+        this.readDialog = true
       })
     },
     closeUpdateDialog() {
